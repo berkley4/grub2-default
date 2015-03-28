@@ -30,8 +30,6 @@ if [ -z $default_file ]; then
   exit 1
 fi
 
-cp -a $default_file $default_file.bak
-
 for g in update-grub update-grub2; do
   command -v $g >/dev/null
   [ $? -eq 1 ] || { UPDATE_GRUB=$g; break; }
@@ -151,7 +149,7 @@ echo "\n\n\nMENU:    $selected_menu"
 [ -z "$selected_sub" ] || echo "SUBMENU: $selected_sub"
 echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $default_file\n\n"
 
-
+cp -a $default_file $default_file.bak
 sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" \
     <$default_file.bak > $default_file
 
