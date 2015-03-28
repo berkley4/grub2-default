@@ -41,9 +41,9 @@ for g in update-grub update-grub2; do
 done
 
 if [ -z $UPDATE_GRUB ]; then
-    echo "ERROR: cannot execute update-grub or update-grub2"
-    echo "check that grub is installed"
-    exit 1
+  echo "ERROR: cannot execute update-grub or update-grub2"
+  echo "check that grub is installed"
+  exit 1
 fi
 
 
@@ -70,8 +70,8 @@ menu_list="$(echo "$menu_raw" | \
                  echo "$i/$sp$line"
                  i=$(expr $i + 1)
                fi
-            done | sed -e 's@submenu@@' -e 's@menuentry@@'
-          )"
+             done | sed -e 's@submenu@@' -e 's@menuentry@@'
+           )"
 
 mlist() { echo "$menu_list"; }
 
