@@ -25,19 +25,16 @@ if [ -z $config_file ]; then
 fi
 
 default_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
-if [ $default_file ]; then
-  cp -a $default_file $default_file.bak
-else
+if [ -z $default_file ]; then
   echo "ERROR: cannot find grub or grub2 file in /etc/default"
   exit 1
 fi
 
+cp -a $default_file $default_file.bak
+
 for g in update-grub update-grub2; do
   command -v $g >/dev/null
-  if [ $? -eq 0 ]; then
-    UPDATE_GRUB=$g
-    break
-  fi
+  [ $? -eq 1 ] || { UPDATE_GRUB=$g; break; }
 done
 
 if [ -z $UPDATE_GRUB ]; then
@@ -61,12 +58,8 @@ menu_list="$(echo "$menu_raw" | \
                  echo "$line"
                else
                  sp=""
-                 if [ $menu_max -gt 9 ]; then
-                   sp=" "
-                 fi
-                 if [ $i -gt 9 ]; then
-                   sp=""
-                 fi
+                 [ $menu_max -lt 10 ] || sp=" "
+                 [ $i -lt 10 ] || sp=""
                  echo "$i/$sp$line"
                  i=$(expr $i + 1)
                fi
@@ -112,18 +105,15 @@ else
   sub_list="$(echo "$menu_raw" | \
               while IFS= read line
               do
-                if [ $x -gt $menu_number ]; then
+                if [ $x -gt $menu_number ]
+                then
                   if [ "$(echo "$line" | grep -E '^(submenu |menuentry )')" ]
                   then
                     break
                   else
                     sp=""
-                    if [ $sub_max -gt 9 ]; then
-                      sp=" "
-                    fi
-                    if [ $y -gt 9 ]; then
-                      sp=""
-                    fi
+                    [ $sub_max -lt 10 ] || sp=" "
+                    [ $y -lt 10 ] || sp=""
                     echo "$line" | sed "s@.*menuentry@$y/$sp@"
                     y=$(expr $y + 1)
                   fi
@@ -158,9 +148,7 @@ fi
 
 
 echo "\n\n\nMENU:    $selected_menu"
-if [ "$selected_sub" ]; then
-  echo "SUBMENU: $selected_sub"
-fi
+[ -z "$selected_sub" ] || echo "SUBMENU: $selected_sub"
 echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $default_file\n\n"
 
 
