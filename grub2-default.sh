@@ -99,14 +99,14 @@ esac
 
 selected_menu="$(mlist | grep ^$menu_number | sed 's@[^"]*\(".*\)@\1@')"
 
-selected_title="$(echo "$selected_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
-
 
 
 if [ -z "$(mlist | grep -A1 "$selected_menu" | grep '^[[:space:]]')" ]
 then
   default_menu=$menu_number
 else
+  selected_title="$(echo "$selected_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
+
   sub_max=$(expr $(echo "$menu_raw" | grep ^[[:space:]] | wc -l) - 1)
 
   sub_list="$(echo "$menu_raw" | \
