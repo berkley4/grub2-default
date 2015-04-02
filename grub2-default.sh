@@ -46,12 +46,12 @@ fi
 menu_raw="$(grep -E '(submenu |menuentry )' $config_file | \
             sed 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\)['\"\''].*@\1\2@')"
 
-menu_max=$(expr $(echo "$menu_raw" | grep -v '^[[:space:]]' | wc -l) - 1)
+menu_max=$(expr $(echo "$menu_raw" | grep -v ^[[:space:]] | wc -l) - 1)
 
 menu_list="$(echo "$menu_raw" | \
              while IFS= read line
              do
-               if [ "$(echo "$line" | grep '^[[:space:]]')" ]
+               if [ "$(echo "$line" | grep ^[[:space:]])" ]
                then
                  echo "$line"
                else
@@ -92,7 +92,7 @@ chosen_menu="$(mlist | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
 
 
 
-if [ -z "$(mlist | grep -A1 "$chosen_menu" | grep '^[[:space:]]')" ]
+if [ -z "$(mlist | grep -A1 "$chosen_menu" | grep ^[[:space:]])" ]
 then
   default_menu=$menu_num
 else
