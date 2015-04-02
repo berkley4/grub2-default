@@ -71,11 +71,11 @@ mlist() { echo "$menu_list"; }
 echo "\n\n<<<<< MENU >>>>>\n"
 echo "$menu_list\n"
 echo -n "Enter menu number [0-$menu_max] (q=exit) > "
-read menu_number
+read menu_num
 
-case $menu_number in
+case $menu_num in
   [0-9]|[0-9][0-9])
-    if [ $menu_number -gt $menu_max ]; then
+    if [ $menu_num -gt $menu_max ]; then
       echo "ERROR: invalid menu number"
       exit 1
     fi ;;
@@ -88,13 +88,13 @@ case $menu_number in
     exit 1 ;;
 esac
 
-selected_menu="$(mlist | grep ^$menu_number | sed 's@[^"]*\(".*\)@\1@')"
+selected_menu="$(mlist | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
 
 
 
 if [ -z "$(mlist | grep -A1 "$selected_menu" | grep '^[[:space:]]')" ]
 then
-  default_menu=$menu_number
+  default_menu=$menu_num
 else
   selected_title="$(echo "$selected_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
 
@@ -103,7 +103,7 @@ else
   sub_list="$(echo "$menu_raw" | \
               while IFS= read line
               do
-                if [ $x -gt $menu_number ]
+                if [ $x -gt $menu_num ]
                 then
                   if [ "$(echo "$line" | grep -E '^(submenu |menuentry )')" ]
                   then
@@ -123,16 +123,16 @@ else
   echo "\n\n\n<<<<< $selected_title >>>>>\n"
   echo "$sub_list\n"
   echo -n "Enter submenu number [0-$sub_max] (q=exit) > "
-  read sub_number
+  read sub_num
 
-  case $sub_number in
+  case $sub_num in
     [0-9]|[0-9][0-9])
-      if [ $sub_number -gt $sub_max ]; then
+      if [ $sub_num -gt $sub_max ]; then
         echo "ERROR: invalid submenu number"
         exit 1
       fi
-      default_menu="$menu_number>$sub_number"
-      selected_sub="$(echo "$sub_list" | grep ^$sub_number/ | \
+      default_menu="$menu_num>$sub_num"
+      selected_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
                       sed 's@[^"]*\(".*\)@\1@')" ;;
 
     q|Q)
