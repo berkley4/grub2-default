@@ -51,8 +51,7 @@ menu_list="$(echo "$menu_raw" | \
 
 echo "\n\n<<<<< MENU >>>>>\n"
 echo "$menu_list\n"
-echo -n "Enter menu number [0-$menu_max] (q=exit) > "
-read menu_num
+echo -n "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
 
 case $menu_num in
   [0-9]|[0-9][0-9])
@@ -98,8 +97,7 @@ else
 
   echo "\n\n\n<<<<< $chosen_title >>>>>\n"
   echo "$sub_list\n"
-  echo -n "Enter submenu number [0-$sub_max] (q=exit) > "
-  read sub_num
+  echo -n "Enter submenu number [0-$sub_max] (q=exit) > "; read sub_num
 
   case $sub_num in
     [0-9]|[0-9][0-9])
