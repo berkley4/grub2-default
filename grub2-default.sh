@@ -18,8 +18,8 @@ fi
 config_file="$(find /boot/grub* -maxdepth 1 -name grub.cfg 2>/dev/null)"
 [ $config_file ] || { echo "ERROR: cannot find grub.cfg file"; exit 1; }
 
-default_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
-[ $default_file ] || { echo "ERROR: cannot find default grub file"; exit 1; }
+deflt_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
+[ $deflt_file ] || { echo "ERROR: cannot find default grub file"; exit 1; }
 
 for g in update-grub update-grub2; do
   command -v $g >/dev/null
@@ -48,8 +48,7 @@ menu_list="$(echo "$menu_raw" | \
                  echo "$i/$sp$line"
                  i=$(expr $i + 1)
                fi
-             done | sed -e 's@submenu@@' -e 's@menuentry@@'
-           )"
+             done | sed -e 's@submenu@@' -e 's@menuentry@@')"
 
 
 
@@ -126,11 +125,10 @@ fi
 
 echo "\n\n\nMENU:    $chosen_menu"
 [ -z "$chosen_sub" ] || echo "SUBMENU: $chosen_sub"
-echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $default_file\n\n"
+echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $deflt_file\n\n"
 
-cp -a $default_file $default_file.bak
-sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" \
-    <$default_file.bak >$default_file
+cp -a $deflt_file $deflt_file.bak
+sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" <$deflt_file.bak >$deflt_file
 
 exec $UPDATE_GRUB
 
