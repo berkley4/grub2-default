@@ -3,10 +3,7 @@
 
 i=0; x=0; y=0
 
-if [ "$USER" != "root" ]; then
-  echo "run this script as root, eg su -c \"$0\""
-  exit 1
-fi
+[ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
 if [ "$(grep '/boot' /etc/fstab)" ]; then
   if [ "$(grep '/boot' /etc/mtab)" ]; then
@@ -19,27 +16,17 @@ if [ "$(grep '/boot' /etc/fstab)" ]; then
 fi
 
 config_file="$(find /boot/grub* -maxdepth 1 -name grub.cfg 2>/dev/null)"
-if [ -z $config_file ]; then
-  echo "ERROR: cannot find grub.cfg in /boot/grub or /boot/grub2"
-  exit 1
-fi
+[ $config_file ] || { echo "ERROR: cannot find grub.cfg file"; exit 1; }
 
 default_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
-if [ -z $default_file ]; then
-  echo "ERROR: cannot find grub or grub2 file in /etc/default"
-  exit 1
-fi
+[ $default_file ] || { echo "ERROR: cannot find default grub file"; exit 1; }
 
 for g in update-grub update-grub2; do
   command -v $g >/dev/null
   [ $? -eq 1 ] || { UPDATE_GRUB=$g; break; }
 done
 
-if [ -z $UPDATE_GRUB ]; then
-  echo "ERROR: cannot execute update-grub or update-grub2"
-  echo "check that grub is installed"
-  exit 1
-fi
+[ $UPDATE_GRUB ] || { echo "ERROR: update-grub is not working"; exit 1; }
 
 
 
@@ -73,10 +60,7 @@ read menu_num
 
 case $menu_num in
   [0-9]|[0-9][0-9])
-    if [ $menu_num -gt $menu_max ]; then
-      echo "ERROR: invalid menu number"
-      exit 1
-    fi ;;
+    [ $menu_num -le $menu_max ] || { echo "invalid number"; exit 1; } ;;
 
   q|Q)
     exit 0 ;;
@@ -125,10 +109,7 @@ else
 
   case $sub_num in
     [0-9]|[0-9][0-9])
-      if [ $sub_num -gt $sub_max ]; then
-        echo "ERROR: invalid submenu number"
-        exit 1
-      fi
+      [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; } ;;
       default_menu="$menu_num>$sub_num"
       chosen_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
                       sed 's@[^"]*\(".*\)@\1@')" ;;
