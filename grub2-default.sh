@@ -25,7 +25,6 @@ for g in update-grub update-grub2; do
   command -v $g >/dev/null
   [ $? -eq 1 ] || { UPDATE_GRUB=$g; break; }
 done
-
 [ $UPDATE_GRUB ] || { echo "ERROR: update-grub is not working"; exit 1; }
 
 
@@ -50,8 +49,6 @@ menu_list="$(echo "$menu_raw" | \
                fi
              done | sed -e 's@submenu@@' -e 's@menuentry@@')"
 
-
-
 echo "\n\n<<<<< MENU >>>>>\n"
 echo "$menu_list\n"
 echo -n "Enter menu number [0-$menu_max] (q=exit) > "
@@ -70,7 +67,6 @@ case $menu_num in
 esac
 
 chosen_menu="$(echo "$menu_list" | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
-
 
 
 if [ -z "$(echo "$menu_list" | grep -A1 "$chosen_menu" | grep ^[[:space:]])" ]
@@ -98,8 +94,7 @@ else
                   fi
                 fi
                 x=$(expr $x + 1)
-              done
-            )"
+              done)"
 
   echo "\n\n\n<<<<< $chosen_title >>>>>\n"
   echo "$sub_list\n"
