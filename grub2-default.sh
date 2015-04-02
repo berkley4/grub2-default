@@ -101,7 +101,7 @@ else
 
   case $sub_num in
     [0-9]|[0-9][0-9])
-      [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; } ;;
+      [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; }
       default_menu="$menu_num>$sub_num"
       chosen_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
                     sed 's@[^"]*\(".*\)@\1@')" ;;
