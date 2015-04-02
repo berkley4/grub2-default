@@ -88,15 +88,15 @@ case $menu_num in
     exit 1 ;;
 esac
 
-selected_menu="$(mlist | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
+chosen_menu="$(mlist | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
 
 
 
-if [ -z "$(mlist | grep -A1 "$selected_menu" | grep '^[[:space:]]')" ]
+if [ -z "$(mlist | grep -A1 "$chosen_menu" | grep '^[[:space:]]')" ]
 then
   default_menu=$menu_num
 else
-  selected_title="$(echo "$selected_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
+  chosen_title="$(echo "$chosen_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
 
   sub_max=$(expr $(echo "$menu_raw" | grep ^[[:space:]] | wc -l) - 1)
 
@@ -120,7 +120,7 @@ else
               done
             )"
 
-  echo "\n\n\n<<<<< $selected_title >>>>>\n"
+  echo "\n\n\n<<<<< $chosen_title >>>>>\n"
   echo "$sub_list\n"
   echo -n "Enter submenu number [0-$sub_max] (q=exit) > "
   read sub_num
@@ -132,7 +132,7 @@ else
         exit 1
       fi
       default_menu="$menu_num>$sub_num"
-      selected_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
+      chosen_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
                       sed 's@[^"]*\(".*\)@\1@')" ;;
 
     q|Q)
@@ -145,8 +145,8 @@ else
 fi
 
 
-echo "\n\n\nMENU:    $selected_menu"
-[ -z "$selected_sub" ] || echo "SUBMENU: $selected_sub"
+echo "\n\n\nMENU:    $chosen_menu"
+[ -z "$chosen_sub" ] || echo "SUBMENU: $chosen_sub"
 echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $default_file\n\n"
 
 cp -a $default_file $default_file.bak
