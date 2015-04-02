@@ -64,8 +64,6 @@ menu_list="$(echo "$menu_raw" | \
              done | sed -e 's@submenu@@' -e 's@menuentry@@'
            )"
 
-mlist() { echo "$menu_list"; }
-
 
 
 echo "\n\n<<<<< MENU >>>>>\n"
@@ -88,11 +86,11 @@ case $menu_num in
     exit 1 ;;
 esac
 
-chosen_menu="$(mlist | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
+chosen_menu="$(echo "$menu_list" | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
 
 
 
-if [ -z "$(mlist | grep -A1 "$chosen_menu" | grep ^[[:space:]])" ]
+if [ -z "$(echo "$menu_list" | grep -A1 "$chosen_menu" | grep ^[[:space:]])" ]
 then
   default_menu=$menu_num
 else
