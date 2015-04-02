@@ -112,7 +112,7 @@ else
       [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; } ;;
       default_menu="$menu_num>$sub_num"
       chosen_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
-                      sed 's@[^"]*\(".*\)@\1@')" ;;
+                    sed 's@[^"]*\(".*\)@\1@')" ;;
 
     q|Q)
       exit 0 ;;
@@ -130,7 +130,7 @@ echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $default_file\n\n"
 
 cp -a $default_file $default_file.bak
 sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" \
-    <$default_file.bak > $default_file
+    <$default_file.bak >$default_file
 
 exec $UPDATE_GRUB
 
