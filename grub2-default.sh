@@ -66,7 +66,7 @@ case $menu_num in
     exit 0 ;;
 
   *)
-    echo "ERROR: invalid input"
+    echo "invalid input"
     exit 1 ;;
 esac
 
@@ -118,7 +118,7 @@ else
       exit 0 ;;
 
     *)
-      echo "ERROR: invalid input"
+      echo "invalid input"
       exit 1 ;;
   esac
 fi
