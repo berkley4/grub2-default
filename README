@@ -1,7 +1,12 @@
-This script lists the grub2 menu entries and allows you to select which one
-to boot by default. It automagically sets the menu number(s) in the 
-GRUB_DEFAULT entry in /etc/default/grub.
+This script lists the grub2 menu entries (including submenus) and allows 
+you to select which one to boot by default. It automagically sets the 
+menu number(s) in the GRUB_DEFAULT entry in /etc/default/grub.
 
 The script was written after spending some time trying to google a solution 
-to what should be an easy task. It should hopefully work on most setups, but 
-no guarantees.
+to what should be an easy task. The default method of using grub-set-default 
+didn't work for me, so I worked out a way to set the default entry without 
+having to look through grub.cfg and figuring out which numbers or titles to 
+use.
+
+The number method I used seems to work reliably and should hopefully work 
+on other setups, but no guarantees.
