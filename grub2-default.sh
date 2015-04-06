@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -e
 
-i=0; x=0; y=0
+i=0; j=0; x=0
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
@@ -35,8 +35,7 @@ menu_raw="$(grep -E '(submenu |menuentry )' $config_file | \
 menu_max=$(expr $(echo "$menu_raw" | grep -v ^[[:space:]] | wc -l) - 1)
 
 menu_list="$(echo "$menu_raw" | \
-             while IFS= read line
-             do
+             while IFS= read line; do
                if [ "$(echo "$line" | grep ^[[:space:]])" ]
                then
                  echo "$line"
@@ -74,25 +73,24 @@ then
 else
   chosen_title="$(echo "$chosen_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
 
-  sub_max=$(expr $(echo "$menu_raw" | grep ^[[:space:]] | wc -l) - 1)
+  sub_raw="$(echo "$menu_raw" | \
+             while IFS= read line; do
+               [ -z "$(echo "$line" | grep "$chosen_title")" ] || x=1
+               if [ $x -eq 1 ] && [ "$(echo "$line" | grep -E ^[[:space:]])" ]
+               then
+                 echo "$line"
+               fi
+             done)"
 
-  sub_list="$(echo "$menu_raw" | \
-              while IFS= read line
-              do
-                if [ $x -gt $menu_num ]
-                then
-                  if [ "$(echo "$line" | grep -E '^(submenu |menuentry )')" ]
-                  then
-                    break
-                  else
-                    sp=""
-                    [ $sub_max -lt 10 ] || sp=" "
-                    [ $y -lt 10 ] || sp=""
-                    echo "$line" | sed "s@.*menuentry@$y/$sp@"
-                    y=$(expr $y + 1)
-                  fi
-                fi
-                x=$(expr $x + 1)
+  sub_max=$(expr $(echo "$sub_raw" | wc -l) - 1)
+
+  sub_list="$(echo "$sub_raw" | \
+              while IFS= read line; do
+                sp=""
+                [ $sub_max -lt 10 ] || sp=" "
+                [ $j -lt 10 ] || sp=""
+                echo "$line" | sed "s@.*menuentry@$j/$sp@"
+                j=$(expr $j + 1)
               done)"
 
   echo "\n\n\n<<<<< $chosen_title >>>>>\n"
