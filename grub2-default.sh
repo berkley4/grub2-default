@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -e
 
-i=0; j=0; FOUND=0; END=0
+i=0; j=0; B=0; E=0
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
@@ -78,13 +78,13 @@ else
   sub_list="$(echo "$menu_list" | \
                 while IFS= read line
                 do
-                  [ -z "$(echo "$line" | grep "$next_item")" ] || FOUND=1
+                  [ -z "$(echo "$line" | grep "$next_item")" ] || B=1
 
-                  if [ $FOUND -eq 1 ]; then
-                    [ -z "$(echo "$line" | grep ^[0-9])" ] || END=1
+                  if [ $B -eq 1 ]; then
+                    [ -z "$(echo "$line" | grep ^[0-9])" ] || E=1
                   fi
 
-                  if [ $FOUND -eq 1 ] && [ $END -eq 0 ]; then
+                  if [ $B -eq 1 ] && [ $E -eq 0 ]; then
                     sp=" "
                     [ $j -lt 10 ] || sp=""
                     echo "$j/  $sp$(echo "$line" | sed 's@^[ \t]*\(.*\)@\1@')"
