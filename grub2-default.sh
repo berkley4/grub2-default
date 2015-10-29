@@ -66,7 +66,7 @@ case $menu_num in
 esac
 
 chosen_menu="$(echo "$menu_list" | grep ^$menu_num/)"
-next_item="$(echo "$menu_list" | grep -A1 "$chosen_menu" | tail -n1)"
+next_item="$(echo "$menu_list" | grep -A1 ^$menu_num/ | tail -n1)"
 
 
 if [ "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]
