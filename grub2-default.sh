@@ -32,21 +32,21 @@ done
 menu_raw="$(grep -E '(submenu |menuentry )' $config_file | \
             sed 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\)['\"\''].*@\1\2@')"
 
-menu_max=$(expr $(echo "$menu_raw" | grep -v ^[[:space:]] | wc -l) - 1)
-
 menu_list="$(echo "$menu_raw" | \
              while IFS= read line; do
                if [ "$(echo "$line" | grep ^[[:space:]])" ]
                then
                  echo "$line"
                else
-                 sp=""
-                 [ $menu_max -lt 10 ] || sp=" "
+                 sp=" "
                  [ $i -lt 10 ] || sp=""
-                 echo "$i/$sp$line"
+                 echo "$i/  $sp$line"
                  i=$(expr $i + 1)
                fi
              done | sed -e 's@submenu@@' -e 's@menuentry@@')"
+
+menu_max=$(expr $(echo "$menu_list" | grep ^[0-9] | wc -l) - 1)
+
 
 echo "\n\n<<<<< MENU >>>>>\n"
 echo "$menu_list\n"
