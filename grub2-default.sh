@@ -65,7 +65,7 @@ case $menu_num in
     exit 1 ;;
 esac
 
-chosen_menu="$(echo "$menu_list" | grep ^$menu_num/ | sed 's@[^"]*\(".*\)@\1@')"
+chosen_menu="$(echo "$menu_list" | grep ^$menu_num/)"
 next_item="$(echo "$menu_list" | grep -A1 "$chosen_menu" | tail -n1)"
 
 
@@ -101,8 +101,7 @@ else
     [0-9]|[0-9][0-9])
       [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; }
       default_menu="$menu_num>$sub_num"
-      chosen_sub="$(echo "$sub_list" | grep ^$sub_num/ | \
-                    sed 's@[^"]*\(".*\)@\1@')" ;;
+      chosen_sub="$(echo "$sub_list" | grep ^$sub_num/)" ;;
 
     q|Q)
       exit 0 ;;
