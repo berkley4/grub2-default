@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -e
 
-i=0; j=0; x=0
+i=0; j=0; FOUND=0; END=0
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
@@ -64,34 +64,32 @@ case $menu_num in
     exit 1 ;;
 esac
 
-chosen_menu="$(echo "$menu_list" | grep ^$menu_num | sed 's@[^"]*\(".*\)@\1@')"
+chosen_menu="$(echo "$menu_list" | grep ^$menu_num/ | sed 's@[^"]*\(".*\)@\1@')"
+next_item="$(echo "$menu_list" | grep -A1 "$chosen_menu" | tail -n1)"
 
 
-if [ -z "$(echo "$menu_list" | grep -A1 "$chosen_menu" | grep ^[[:space:]])" ]
+if [ "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]
 then
   default_menu=$menu_num
 else
   chosen_title="$(echo "$chosen_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
 
-  sub_raw="$(echo "$menu_raw" | \
-             while IFS= read line; do
-               [ -z "$(echo "$line" | grep "$chosen_title")" ] || x=1
-               if [ $x -eq 1 ] && [ "$(echo "$line" | grep -E ^[[:space:]])" ]
-               then
-                 echo "$line"
-               fi
-             done)"
-
-  sub_max=$(expr $(echo "$sub_raw" | wc -l) - 1)
-
-  sub_list="$(echo "$sub_raw" | \
+  sub_list="$(echo "$menu_list" | \
               while IFS= read line; do
-                sp=""
-                [ $sub_max -lt 10 ] || sp=" "
-                [ $j -lt 10 ] || sp=""
-                echo "$line" | sed "s@.*menuentry@$j/$sp@"
-                j=$(expr $j + 1)
+                [ -z "$(echo "$line" | grep "$next_item")" ] || FOUND=1
+                if [ $FOUND -eq 1 ]; then
+                  [ -z "$(echo "$line" | grep ^[0-9])" ] || END=1
+                fi
+                if [ $FOUND -eq 1 ] && [ $END -eq 0 ]; then
+                  sp=" "
+                  [ $j -lt 10 ] || sp=""
+                  echo "$j/  $sp$(echo "$line" | sed 's@^[ \t]*\(.*\)@\1@')"
+                  j=$(expr $j + 1)
+                fi
               done)"
+
+  sub_max=$(expr $(echo "$sub_list" | wc -l) - 1)
+
 
   echo "\n\n\n<<<<< $chosen_title >>>>>\n"
   echo "$sub_list\n"
