@@ -7,7 +7,7 @@ i=0; j=0; B=0; E=0
 
 if [ "$(grep '/boot' /etc/fstab)" ]; then
   if [ "$(grep '/boot' /etc/mtab)" ]; then
-    if [ "$(grep -E '/boot [a-z]+[0-9]? ro,' /etc/mtab)" ]; then
+    if [ "$(sed -n '/\/boot [a-z0-9][a-z0-9]* ro,/p' /etc/mtab)" ]; then
       mount -o rw,remount /boot
     fi
   else
@@ -29,8 +29,8 @@ done
 
 
 
-menu_raw="$(grep -E '(submenu |menuentry )' $config_file | \
-            sed 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\)['\"\''].*@\1\2@')"
+menu_raw="$(sed -n '/\(submenu \|menuentry \)/p' <$config_file | \
+            sed 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@')"
 
 menu_list="$(echo "$menu_raw" | \
                while IFS= read line
