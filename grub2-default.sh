@@ -33,18 +33,18 @@ menu_raw="$(grep -E '(submenu |menuentry )' $config_file | \
             sed 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\)['\"\''].*@\1\2@')"
 
 menu_list="$(echo "$menu_raw" | \
-             while IFS= read line
-             do
-               if [ "$(echo "$line" | grep ^[[:space:]])" ]
-               then
-                 echo "$line"
-               else
-                 sp=" "
-                 [ $i -lt 10 ] || sp=""
-                 echo "$i/  $sp$line"
-                 i=$(expr $i + 1)
-               fi
-             done | sed -e 's@submenu@@' -e 's@menuentry@@')"
+               while IFS= read line
+               do
+                 if [ "$(echo "$line" | grep ^[[:space:]])" ]
+                 then
+                   echo "$line"
+                 else
+                   sp=" "
+                   [ $i -lt 10 ] || sp=""
+                   echo "$i/  $sp$line"
+                   i=$(expr $i + 1)
+                 fi
+               done | sed -e 's@submenu@@' -e 's@menuentry@@')"
 
 menu_max=$(expr $(echo "$menu_list" | grep ^[0-9] | wc -l) - 1)
 
@@ -76,19 +76,21 @@ else
   chosen_title="$(echo "$chosen_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
 
   sub_list="$(echo "$menu_list" | \
-              while IFS= read line
-              do
-                [ -z "$(echo "$line" | grep "$next_item")" ] || FOUND=1
-                if [ $FOUND -eq 1 ]; then
-                  [ -z "$(echo "$line" | grep ^[0-9])" ] || END=1
-                fi
-                if [ $FOUND -eq 1 ] && [ $END -eq 0 ]; then
-                  sp=" "
-                  [ $j -lt 10 ] || sp=""
-                  echo "$j/  $sp$(echo "$line" | sed 's@^[ \t]*\(.*\)@\1@')"
-                  j=$(expr $j + 1)
-                fi
-              done)"
+                while IFS= read line
+                do
+                  [ -z "$(echo "$line" | grep "$next_item")" ] || FOUND=1
+
+                  if [ $FOUND -eq 1 ]; then
+                    [ -z "$(echo "$line" | grep ^[0-9])" ] || END=1
+                  fi
+
+                  if [ $FOUND -eq 1 ] && [ $END -eq 0 ]; then
+                    sp=" "
+                    [ $j -lt 10 ] || sp=""
+                    echo "$j/  $sp$(echo "$line" | sed 's@^[ \t]*\(.*\)@\1@')"
+                    j=$(expr $j + 1)
+                  fi
+                done)"
 
   sub_max=$(expr $(echo "$sub_list" | wc -l) - 1)
 
