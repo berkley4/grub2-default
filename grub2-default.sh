@@ -80,9 +80,7 @@ else
                 do
                   [ -z "$(echo "$line" | grep "$next_item")" ] || B=1
 
-                  if [ $B -eq 1 ]; then
-                    [ -z "$(echo "$line" | grep ^[0-9])" ] || E=1
-                  fi
+                  [ $B -eq 0 ] || [ -z "$(echo "$line" | grep ^[0-9])" ] || E=1
 
                   if [ $B -eq 1 ] && [ $E -eq 0 ]; then
                     sp=" "
