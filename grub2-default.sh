@@ -30,7 +30,7 @@ done
 
 
 menu_list="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
-                    -e '/\(submenu \|menuentry \)/p' <$config_file | \
+                    -e '/\(submenu\|menuentry\) /p' <$config_file | \
                while IFS= read line
                do
                  if [ "$(echo "$line" | grep ^[[:space:]])" ]
