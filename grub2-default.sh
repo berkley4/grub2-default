@@ -46,7 +46,7 @@ menu_list="$(echo "$menu_raw" | \
 
                    i=$(expr $i + 1)
                  fi
-               done | sed -e 's@submenu@@' -e 's@menuentry@@')"
+               done | sed 's@\(submenu\|menuentry\) @@')"
 
 menu_max=$(expr $(echo "$menu_list" | grep ^[0-9] | wc -l) - 1)
 
