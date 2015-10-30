@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -e
 
-x=0; y=0; B=0; E=0
+x=0; y=0; B=0
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
@@ -79,9 +79,9 @@ else
                 do
                   [ -z "$(echo "$ln" | grep "$next_item")" ] || B=1
 
-                  [ $B -eq 0 ] || [ -z "$(echo "$ln" | grep ^[0-9])" ] || E=1
+                  [ $B -eq 0 ] || [ -z "$(echo "$ln" | grep ^[0-9])" ] || break
 
-                  if [ $B -eq 1 ] && [ $E -eq 0 ]; then
+                  if [ $B -eq 1 ]; then
                     sp=" "
                     [ $y -lt 10 ] || sp=""
 
