@@ -41,7 +41,9 @@ menu_list="$(echo "$menu_raw" | \
                  else
                    sp=" "
                    [ $i -lt 10 ] || sp=""
+
                    echo "$i/  $sp$line"
+
                    i=$(expr $i + 1)
                  fi
                done | sed -e 's@submenu@@' -e 's@menuentry@@')"
@@ -85,7 +87,9 @@ else
                   if [ $B -eq 1 ] && [ $E -eq 0 ]; then
                     sp=" "
                     [ $j -lt 10 ] || sp=""
+
                     echo "$j/  $sp$(echo "$line" | sed 's@^[ \t]*\(.*\)@\1@')"
+
                     j=$(expr $j + 1)
                   fi
                 done)"
