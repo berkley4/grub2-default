@@ -49,8 +49,7 @@ menu_list="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
 menu_max=$(expr $(echo "$menu_list" | grep ^[0-9] | wc -l) - 1)
 
 
-echo "\n\n<<<<< MENU >>>>>\n"
-echo "$menu_list\n"
+echo "\n\n$menu_list\n"
 echo -n "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
 
 case $menu_num in
@@ -72,7 +71,7 @@ if [ "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]
 then
   default_menu=$menu_num
 else
-  chosen_title="$(echo "$chosen_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
+  chosen_title="$(echo "$chosen_menu" | sed 's@^[^/]*/[ ]*@@')"
 
   sub_list="$(echo "$menu_list" | \
                 while IFS= read ln
@@ -85,7 +84,7 @@ else
                     sp=" "
                     [ $y -lt 10 ] || sp=""
 
-                    echo "$y/  $sp$(echo "$ln" | sed 's@^[ \t]*\(.*\)@\1@')"
+                    echo "    $y)$sp $(echo "$ln" | sed 's@^[ \t]*@@')"
 
                     y=$(expr $y + 1)
                   fi
@@ -94,7 +93,7 @@ else
   sub_max=$(expr $(echo "$sub_list" | wc -l) - 1)
 
 
-  echo "\n\n\n<<<<< $chosen_title >>>>>\n"
+  echo "\n\n\n$(echo "$chosen_menu" | sed 's@\(^[^/]*/\)[ \t]*@\1  @')  >>>\n"
   echo "$sub_list\n"
   echo -n "Enter submenu number [0-$sub_max] (q=exit) > "; read sub_num
 
