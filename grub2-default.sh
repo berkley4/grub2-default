@@ -29,8 +29,8 @@ done
 
 
 
-menu_raw="$(sed -n '/\(submenu \|menuentry \)/p' <$config_file | \
-            sed 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@')"
+menu_raw="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
+                   -e '/\(submenu \|menuentry \)/p' <$config_file)"
 
 menu_list="$(echo "$menu_raw" | \
                while IFS= read line
