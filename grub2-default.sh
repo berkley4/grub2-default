@@ -55,7 +55,9 @@ echo -n "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
 
 case $menu_num in
   [0-9]|[0-9][0-9])
-    [ $menu_num -le $menu_max ] || { echo "invalid number"; exit 1; } ;;
+    [ $menu_num -le $menu_max ] || { echo "invalid number"; exit 1; }
+    chosen_menu="$(echo "$menu_list" | grep ^$menu_num/)"
+    next_item="$(echo "$menu_list" | grep -A1 ^$menu_num/ | tail -n1)" ;;
 
   q|Q)
     exit 0 ;;
@@ -64,9 +66,6 @@ case $menu_num in
     echo "invalid input"
     exit 1 ;;
 esac
-
-chosen_menu="$(echo "$menu_list" | grep ^$menu_num/)"
-next_item="$(echo "$menu_list" | grep -A1 ^$menu_num/ | tail -n1)"
 
 
 if [ "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]
