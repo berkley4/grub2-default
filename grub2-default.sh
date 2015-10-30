@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -e
 
-i=0; j=0; B=0; E=0
+x=0; y=0; B=0; E=0
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
@@ -31,18 +31,18 @@ done
 
 menu_list="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
                     -e '/\(submenu\|menuentry\) /p' <$config_file | \
-               while IFS= read line
+               while IFS= read ln
                do
-                 if [ "$(echo "$line" | grep ^[[:space:]])" ]
+                 if [ "$(echo "$ln" | grep ^[[:space:]])" ]
                  then
-                   echo "$line"
+                   echo "$ln"
                  else
                    sp=" "
-                   [ $i -lt 10 ] || sp=""
+                   [ $x -lt 10 ] || sp=""
 
-                   echo "$i/  $sp$line"
+                   echo "$x/  $sp$ln"
 
-                   i=$(expr $i + 1)
+                   x=$(expr $x + 1)
                  fi
                done | sed 's@\(submenu\|menuentry\) @@')"
 
@@ -75,19 +75,19 @@ else
   chosen_title="$(echo "$chosen_menu" | sed 's@^[0-9][^/]*/[ ]*@@')"
 
   sub_list="$(echo "$menu_list" | \
-                while IFS= read line
+                while IFS= read ln
                 do
-                  [ -z "$(echo "$line" | grep "$next_item")" ] || B=1
+                  [ -z "$(echo "$ln" | grep "$next_item")" ] || B=1
 
-                  [ $B -eq 0 ] || [ -z "$(echo "$line" | grep ^[0-9])" ] || E=1
+                  [ $B -eq 0 ] || [ -z "$(echo "$ln" | grep ^[0-9])" ] || E=1
 
                   if [ $B -eq 1 ] && [ $E -eq 0 ]; then
                     sp=" "
-                    [ $j -lt 10 ] || sp=""
+                    [ $y -lt 10 ] || sp=""
 
-                    echo "$j/  $sp$(echo "$line" | sed 's@^[ \t]*\(.*\)@\1@')"
+                    echo "$y/  $sp$(echo "$ln" | sed 's@^[ \t]*\(.*\)@\1@')"
 
-                    j=$(expr $j + 1)
+                    y=$(expr $y + 1)
                   fi
                 done)"
 
