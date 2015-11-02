@@ -49,8 +49,8 @@ menu_list="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
 menu_max=$(expr $(echo "$menu_list" | grep ^[0-9] | wc -l) - 1)
 
 
-echo "\n\n$menu_list\n"
-echo -n "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
+printf '\n\n%s\n' "$menu_list"
+printf '%s' "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
 
 case $menu_num in
   [0-9]|[0-9][0-9])
@@ -92,10 +92,11 @@ else
 
   sub_max=$(expr $(echo "$sub_list" | wc -l) - 1)
 
+  chosen_menu_header="$(echo "$chosen_menu" | sed 's@\(^[^/]*/\)[ \t]*@\1  @')"
 
-  echo "\n\n\n$(echo "$chosen_menu" | sed 's@\(^[^/]*/\)[ \t]*@\1  @')  >>>\n"
-  echo "$sub_list\n"
-  echo -n "Enter submenu number [0-$sub_max] (q=exit) > "; read sub_num
+  printf '\n\n\n%s\n' "$chosen_menu_header  >>>"
+  printf '%s\n' "$sub_list"
+  printf '%s' "Enter submenu number [0-$sub_max] (q=exit) > "; read sub_num
 
   case $sub_num in
     [0-9]|[0-9][0-9])
@@ -113,10 +114,10 @@ else
 fi
 
 
-echo "\n\n\nMENU:    $chosen_menu"
-[ -z "$chosen_sub" ] || echo "SUBMENU: $chosen_sub"
-echo "\nSetting GRUB_DEFAULT=\"$default_menu\" in $deflt_file\n\n"
-
+printf '\n\n\n%s' "MENU:    $chosen_menu"
+[ -z "$chosen_sub" ] || printf '%s\n\n' "SUBMENU: $chosen_sub"
+printf '%s\n\n' "Setting GRUB_DEFAULT=\"$default_menu\" in $deflt_file"
+exit
 cp -a $deflt_file $deflt_file.bak
 sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" <$deflt_file.bak >$deflt_file
 
