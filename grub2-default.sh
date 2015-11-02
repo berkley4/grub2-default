@@ -102,7 +102,7 @@ else
     [0-9]|[0-9][0-9])
       [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; }
       default_menu="$menu_num>$sub_num"
-      chosen_sub="$(echo "$sub_list" | grep ^$sub_num/)" ;;
+      chosen_sub="$(echo "$sub_list" | grep "^    $sub_num)")" ;;
 
     q|Q)
       exit 0 ;;
