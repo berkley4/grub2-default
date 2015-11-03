@@ -56,7 +56,9 @@ case $menu_num in
   [0-9]|[0-9][0-9])
     [ $menu_num -le $menu_max ] || { echo "invalid number"; exit 1; }
     chosen_menu="$(echo "$menu_list" | grep ^$menu_num/)"
-    next_item="$(echo "$menu_list" | grep -A1 ^$menu_num/ | tail -n1)" ;;
+    chosen_header="$(echo "$chosen_menu" | sed 's@\(^[^/]*/\)[ \t]*@\1  @')"
+    next_item="$(echo "$menu_list" | grep -A1 ^$menu_num/ | tail -n1)"
+    default_menu=$menu_num ;;
 
   q|Q)
     exit 0 ;;
@@ -67,10 +69,8 @@ case $menu_num in
 esac
 
 
-if [ "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]
-then
-  default_menu=$menu_num
-else
+
+if [ -z "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]; then
   chosen_title="$(echo "$chosen_menu" | sed 's@^[^/]*/[ ]*@@')"
 
   sub_list="$(echo "$menu_list" | \
@@ -92,9 +92,7 @@ else
 
   sub_max=$(expr $(echo "$sub_list" | wc -l) - 1)
 
-  chosen_menu_header="$(echo "$chosen_menu" | sed 's@\(^[^/]*/\)[ \t]*@\1  @')"
-
-  printf '\n\n\n%s\n' "$chosen_menu_header  >>>"
+  printf '\n\n\n%s\n' "$chosen_header  >>>"
   printf '%s\n\n' "$sub_list"
   printf '%s' "Enter submenu number [0-$sub_max] (q=exit) > "; read sub_num
 
@@ -115,7 +113,7 @@ fi
 
 
 printf '\n\n\n%s\n\n' "You have selected :-"
-printf '%s\n' "$chosen_menu_header"
+printf '%s\n' "$chosen_header"
 [ -z "$chosen_sub" ] || printf '%s\n\n\n' "$chosen_sub"
 printf '%s\n\n' "Setting GRUB_DEFAULT=\"$default_menu\" in $deflt_file"
 
