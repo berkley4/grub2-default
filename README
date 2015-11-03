@@ -1,7 +1,7 @@
 This script lists the grub2 menu entries (including submenus) 
 and allows you to select which one to boot by default. It sets 
-the menu (and submenu) number in the GRUB_DEFAULT in 
-/etc/default/grub.
+the menu (and submenu) number in GRUB_DEFAULT in 
+/etc/default/grub, and then (by default) runs update-grub.
 
 The script was written after spending some time trying to 
 google a solution to what should be an easy task. The default 
