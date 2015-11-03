@@ -6,23 +6,6 @@ USAGE="Usage: $0 [help|h|H|n|N]"
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
-if [ "$(grep '/boot' /etc/fstab)" ]; then
-  if [ "$(grep '/boot' /etc/mtab)" ]; then
-    if [ "$(sed -n '/\/boot [a-z0-9][a-z0-9]* ro,/p' /etc/mtab)" ]; then
-      mount -o rw,remount /boot
-    fi
-  else
-    mount -o rw /boot
-  fi
-fi
-
-config_file="$(find /boot/grub* -maxdepth 1 -name grub.cfg 2>/dev/null)"
-[ $config_file ] || { echo "ERROR: cannot find grub.cfg file"; exit 1; }
-
-deflt_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
-[ $deflt_file ] || { echo "ERROR: cannot find default grub file"; exit 1; }
-
-
 case $1 in
   help|h|H)
     echo "$USAGE"
@@ -43,6 +26,22 @@ case $1 in
     echo "$USAGE"
     exit 1 ;;
 esac
+
+if [ "$(grep '/boot' /etc/fstab)" ]; then
+  if [ "$(grep '/boot' /etc/mtab)" ]; then
+    if [ "$(sed -n '/\/boot [a-z0-9][a-z0-9]* ro,/p' /etc/mtab)" ]; then
+      mount -o rw,remount /boot
+    fi
+  else
+    mount -o rw /boot
+  fi
+fi
+
+config_file="$(find /boot/grub* -maxdepth 1 -name grub.cfg 2>/dev/null)"
+[ $config_file ] || { echo "ERROR: cannot find grub.cfg file"; exit 1; }
+
+deflt_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
+[ $deflt_file ] || { echo "ERROR: cannot find default grub file"; exit 1; }
 
 
 
