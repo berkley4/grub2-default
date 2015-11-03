@@ -2,6 +2,7 @@
 #set -e
 
 x=0; y=0; B=0
+USAGE="Usage: $0 [help|h|H|n|N]"
 
 [ "$USER" = "root" ] || { echo "run this script as root"; exit 1; }
 
@@ -21,11 +22,27 @@ config_file="$(find /boot/grub* -maxdepth 1 -name grub.cfg 2>/dev/null)"
 deflt_file="$(find /etc/default \( -name grub -o -name grub2 \) 2>/dev/null)"
 [ $deflt_file ] || { echo "ERROR: cannot find default grub file"; exit 1; }
 
-for g in update-grub update-grub2; do
-  command -v $g >/dev/null
-  [ $? -eq 1 ] || { UPDATE_GRUB=$g; break; }
-done
-[ $UPDATE_GRUB ] || { echo "ERROR: update-grub is not working"; exit 1; }
+
+case $1 in
+  help|h|H)
+    echo "$USAGE"
+    exit 0 ;;
+
+  n|N)
+    UPDATE_GRUB="" ;;
+
+  "")
+    for g in update-grub update-grub2; do
+      command -v $g >/dev/null
+      [ $? -eq 1 ] || { UPDATE_GRUB=$g; break; }
+    done
+
+    [ $UPDATE_GRUB ] || echo "WARN: update-grub is not working" ;;
+
+  *)
+    echo "$USAGE"
+    exit 1 ;;
+esac
 
 
 
@@ -123,7 +140,7 @@ printf '%s\n\n' "Setting GRUB_DEFAULT=\"$default_menu\" in $deflt_file"
 cp -a $deflt_file $deflt_file.bak
 sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" <$deflt_file.bak >$deflt_file
 
-exec $UPDATE_GRUB
+[ -z $UPDATE_GRUB ] || exec $UPDATE_GRUB
 
 
 exit 0
