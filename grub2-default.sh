@@ -108,7 +108,8 @@ if [ -z "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]; then
 
   printf '\n\n\n%s\n' "$chosen_menu  >>>"
   printf '%s\n\n' "$sub_list"
-  printf '%s' "Enter submenu number [0-$sub_max] (q=exit) > "; read sub_num
+  printf '%s' "Enter submenu number [0-$sub_max] (q=exit, r=restart) > "
+  read sub_num
 
   case $sub_num in
     [0-9]|[0-9][0-9])
@@ -120,6 +121,10 @@ if [ -z "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]; then
     q|Q)
       exit 0 ;;
 
+    r|R)
+      $0 $1
+      exit $? ;;
+
     *)
       echo "invalid input"
       exit 1 ;;
@@ -130,7 +135,7 @@ fi
 printf '\n\n\n%s\n\n' "You have selected :-"
 printf '%s\n' "$chosen_menu"
 [ -z "$chosen_sub" ] || printf '%s\n\n\n' "$chosen_sub"
-printf '%s\n\n' "Setting GRUB_DEFAULT=\"$default_menu\" in $deflt_file"
+printf '%s\n\n\n' "Setting GRUB_DEFAULT=\"$default_menu\" in $deflt_file"
 
 
 cp -a $deflt_file $deflt_file.bak
@@ -139,4 +144,4 @@ sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" <$deflt_file.bak >$deflt_file
 [ -z $UPDATE_GRUB ] || exec $UPDATE_GRUB
 
 
-exit 0
+exit $?
