@@ -66,7 +66,8 @@ menu_max=$(expr $(echo "$menu_list" | grep ^[0-9] | wc -l) - 1)
 
 
 printf '\n\n%s\n\n' "$menu_list"
-printf '%s' "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
+printf '%s' "Enter menu number [0-$menu_max] (q=exit) > "
+read menu_num
 
 case $menu_num in
   [0-9]|[0-9][0-9])
