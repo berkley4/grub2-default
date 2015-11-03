@@ -29,7 +29,7 @@ esac
 
 if [ "$(grep '/boot' /etc/fstab)" ]; then
   if [ "$(grep '/boot' /etc/mtab)" ]; then
-    if [ "$(sed -n '/\/boot [a-z0-9][a-z0-9]* ro,/p' /etc/mtab)" ]; then
+    if [ "$(sed -n '/\/boot [a-z0-9][a-z0-9]* ro,/p' </etc/mtab)" ]; then
       mount -o rw,remount /boot
     fi
   else
