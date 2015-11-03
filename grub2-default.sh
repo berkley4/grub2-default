@@ -118,7 +118,8 @@ printf '\n\n\n%s\n\n' "You have selected :-"
 printf '%s\n' "$chosen_menu_header"
 [ -z "$chosen_sub" ] || printf '%s\n\n\n' "$chosen_sub"
 printf '%s\n\n' "Setting GRUB_DEFAULT=\"$default_menu\" in $deflt_file"
-exit
+
+
 cp -a $deflt_file $deflt_file.bak
 sed "s@^\(GRUB_DEFAULT=\).*@\1\"$default_menu\"@" <$deflt_file.bak >$deflt_file
 
