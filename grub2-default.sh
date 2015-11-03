@@ -55,6 +55,7 @@ printf '%s' "Enter menu number [0-$menu_max] (q=exit) > "; read menu_num
 case $menu_num in
   [0-9]|[0-9][0-9])
     [ $menu_num -le $menu_max ] || { echo "invalid number"; exit 1; }
+
     chosen_menu="$(echo "$menu_list" | grep ^$menu_num/)"
     chosen_header="$(echo "$chosen_menu" | sed 's@\(^[^/]*/\)[ \t]*@\1  @')"
     next_item="$(echo "$menu_list" | grep -A1 ^$menu_num/ | tail -n1)"
@@ -98,6 +99,7 @@ if [ -z "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]; then
   case $sub_num in
     [0-9]|[0-9][0-9])
       [ $sub_num -le $sub_max ] || { echo "invalid number"; exit 1; }
+
       default_menu="$menu_num>$sub_num"
       chosen_sub="$(echo "$sub_list" | grep "^    $sub_num)")" ;;
 
