@@ -53,9 +53,7 @@ menu_list="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
                  then
                    echo "$ln"
                  else
-                   sp=" "
-                   [ $x -lt 10 ] || sp=""
-
+                   sp=" " && [ $x -lt 10 ] || sp=""
                    echo "$x/ $sp$ln"
 
                    x=$(expr $x + 1)
@@ -95,9 +93,7 @@ if [ -z "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]; then
                   [ $B -eq 0 ] || [ -z "$(echo "$ln" | grep ^[0-9])" ] || break
 
                   if [ $B -eq 1 ]; then
-                    sp=" "
-                    [ $y -lt 10 ] || sp=""
-
+                    sp=" " && [ $y -lt 10 ] || sp=""
                     echo "    $y)$sp $(echo "$ln" | sed 's@^[ \t]*@@')"
 
                     y=$(expr $y + 1)
