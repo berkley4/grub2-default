@@ -57,7 +57,7 @@ menu_list="$(sed -n -e 's@\([^'\"\'']*\)['\"\'']\([^'\"\'']*\).*@\1\2@' \
                    sp=" "
                    [ $x -lt 10 ] || sp=""
 
-                   echo "$x/  $sp$ln"
+                   echo "$x/ $sp$ln"
 
                    x=$(expr $x + 1)
                  fi
