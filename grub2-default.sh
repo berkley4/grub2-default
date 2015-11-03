@@ -69,7 +69,6 @@ case $menu_num in
 esac
 
 
-
 if [ -z "$(echo "$next_item" | grep ^[0-9][^/]*/)" ]; then
   chosen_title="$(echo "$chosen_menu" | sed 's@^[^/]*/[ ]*@@')"
 
